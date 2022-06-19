@@ -79,7 +79,7 @@ prompt_end() {
   else
     echo -n "%{%k%}"
   fi
-  echo -n "\e[m\n➜%{%f%}"
+  echo -n "\n%{%F{cyan}%}$SEGMENT_SEPARATOR%{%f%}"
   CURRENT_BG=''
 }
 
@@ -88,9 +88,11 @@ prompt_end() {
 
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
+## remove hostname %m
+## Add date
   if [[ "$USERNAME" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment magenta black "%(!.%{%F{yellow}%}.)%n@%m"
- fi
+    prompt_segment magenta black "%(!.%{%F{yellow}%}.)%T %n"
+  fi
 }
 
 prompt_emoji() {
@@ -99,11 +101,6 @@ prompt_emoji() {
   RAND_EMOJI_N=$(( $RANDOM % ${#emojis[@]} + 1))
   prompt_segment black default "${emojis[$RAND_EMOJI_N]} "
 }
-
-prompt_time() {
-  prompt_segment green black "%T"
-}
-
 
 # Git: branch/detached head, dirty status
 prompt_git() {
@@ -125,7 +122,7 @@ prompt_git() {
     if [[ -n $dirty ]]; then
       prompt_segment yellow black
     else
-      prompt_segment green $CURRENT_FG
+      prompt_segment cyan white
     fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
@@ -216,7 +213,7 @@ prompt_hg() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue $CURRENT_FG '%1~'
+  prompt_segment yellow $CURRENT_FG '%~'
 }
 
 # Virtualenv: current working virtualenv
@@ -260,8 +257,7 @@ build_prompt() {
   prompt_status
   prompt_virtualenv
   prompt_aws
-  prompt_emoji
-  prompt_time
+	prompt_emoji
   prompt_context
   prompt_dir
   prompt_git
