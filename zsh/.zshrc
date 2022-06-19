@@ -76,15 +76,55 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# set up directory DEV for alias and env
+if [ -d "$HOME/Documents/DEV" ] ; then
+		export DEV_DIR="$HOME/Documents/DEV"
+else	
+		export DEV_DIR="$HOME/DEV"
+fi
+
 # set up NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 			
-# set up Rust toolchain in $HOME/rust
-export RUSTUP_HOME="$HOME/rust/.rustup"
-export CARGO_HOME="$HOME/rust/.cargo"
-. "$HOME/rust/.cargo/env"
+# set up Rust toolchain in $HOME/rust or else in DEV
+if [ -d "$HOME/rust" ] ; then
+		export RUSTUP_HOME="$HOME/rust/.rustup"
+		export CARGO_HOME="$HOME/rust/.cargo"
+		. "$HOME/rust/.cargo/env"
+else
+		export RUSTUP_HOME="$DEV_DIR/rust/.rustup"
+		export CARGO_HOME="$DEV_DIR/rust/.cargo"
+		. "$DEV_DIR/rust/.cargo/env"
+fi
+
+# For brew installed packages
+export PATH="/usr/local/sbin:$PATH"
+
+# For brew aws
+export PATH="/usr/local/opt/awscli@1/bin:$PATH"
+
+# For lunarvim
+export PATH="$PATH:${HOME}/.local/bin"
+
+# NPM Global installed packages
+# export PATH="~/.npm-global/bin"
+
+# function to have shell builtin displayed with man
+man () {
+    case "$(type -t -- "$1")" in
+    builtin|keyword)
+        help "$1"
+        ;;
+    *)
+        command man "$@"
+        ;;
+    esac
+}
+
+# For java setup
+[ -s "$HOME/.jabba/jabba.sh" ] && source "$HOME/.jabba/jabba.sh"
 
 # User configuration
 
@@ -94,11 +134,11 @@ export CARGO_HOME="$HOME/rust/.cargo"
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+ if [[ -n $SSH_CONNECTION ]]; then
+   export EDITOR='vim'
+ else
+   export EDITOR='nvim'
+ fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -111,6 +151,9 @@ export CARGO_HOME="$HOME/rust/.cargo"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
 alias ls="ls -alG"
 alias cls="clear"
-alias dev="$HOME/Documents/DEV"
+alias -s txt=nvim
+alias vim="$EDITOR"
+alias dev="$DEV_DIR"
