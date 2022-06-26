@@ -3,3 +3,4 @@
     stt = status
     co = checkout
     branches = branch --all
+    cof = !git branch --all | fzf | xargs git checkout

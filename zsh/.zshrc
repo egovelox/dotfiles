@@ -76,6 +76,10 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+
+# Enable fzf addons like completion with **
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # set up directory DEV for alias and env
 if [ -d "$HOME/Documents/DEV" ] ; then
 		export DEV_DIR="$HOME/Documents/DEV"
@@ -87,7 +91,9 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-			
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 # set up Rust toolchain in $HOME/rust or else in DEV
 if [ -d "$HOME/rust" ] ; then
 		export RUSTUP_HOME="$HOME/rust/.rustup"
@@ -157,3 +163,5 @@ alias cls="clear"
 alias -s txt=nvim
 alias vim="$EDITOR"
 alias dev="$DEV_DIR"
+alias gitcos="git branches | fzf | xargs git co"
+
