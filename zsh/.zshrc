@@ -79,6 +79,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Enable fzf addons like completion with **
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 50% --layout=reverse'
 
 # set up directory DEV for alias and env
 if [ -d "$HOME/Documents/DEV" ] ; then
@@ -163,5 +164,4 @@ alias cls="clear"
 alias -s txt=nvim
 alias vim="$EDITOR"
 alias dev="$DEV_DIR"
-alias gitcos="git branches | fzf | xargs git co"
 
